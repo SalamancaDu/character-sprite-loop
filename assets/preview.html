@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>透明循环帧预览</title>
+<style>
+  :root { color-scheme: light; font-family: system-ui, sans-serif; color: #222; background: #f2f2ef; }
+  body { margin: 0; padding: 24px; }
+  main { max-width: 800px; margin: auto; }
+  h1 { font-size: 22px; margin: 0 0 12px; }
+  p { line-height: 1.6; }
+  .controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+  button, select { font: inherit; padding: 8px 12px; border: 1px solid #777; border-radius: 4px; background: #fff; color: #222; }
+  button { cursor: pointer; }
+  button:disabled { cursor: default; opacity: .5; }
+  :focus-visible { outline: 3px solid #087e75; outline-offset: 3px; }
+  output { font-variant-numeric: tabular-nums; }
+  #stage { width: fit-content; max-width: 100%; margin: 20px auto; border: 1px solid #999; }
+  #stage[data-background="light"] { background: #fff; }
+  #stage[data-background="dark"] { background: #292929; }
+  #stage[data-background="checker"] { background: conic-gradient(#ddd 25%, #fff 0 50%, #ddd 0 75%, #fff 0) 0 0 / 24px 24px; }
+  #sprite { display: block; max-width: 100%; height: auto; }
+  #error { color: #a32424; }
+</style>
+<main>
+  <h1>透明循环帧预览</h1>
+  <p id="summary"></p>
+  <div class="controls">
+    <button id="previous" disabled>上一帧</button>
+    <button id="toggle" disabled>播放</button>
+    <button id="next" disabled>下一帧</button>
+    <output id="frame-counter" aria-label="当前帧"></output>
+    <label>预览背景
+      <select id="background">
+        <option value="light">浅色</option>
+        <option value="dark">深色</option>
+        <option value="checker">棋盘格</option>
+      </select>
+    </label>
+  </div>
+  <p id="status" role="status">正在加载独立 PNG…</p>
+  <p id="error" role="alert" hidden></p>
+  <div id="stage" data-background="light"><img id="sprite" alt="角色动作帧"></div>
+  <p>预览背景不会改变 PNG 的透明度。检查动作时连续观看至少两个循环，并逐帧核对首尾过渡。</p>
+</main>
+<script id="frame-data" type="application/json">__FRAME_DATA__</script>
+<script>
+"use strict";
+const data = JSON.parse(document.getElementById("frame-data").textContent);
+const sprite = document.getElementById("sprite");
+const toggle = document.getElementById("toggle");
+const previous = document.getElementById("previous");
+const next = document.getElementById("next");
+const counter = document.getElementById("frame-counter");
+const status = document.getElementById("status");
+let index = 0;
+let playing = false;
+let requestId = 0;
+let startTime = 0;
+let startIndex = 0;
+let images = [];
+sprite.width = data.width;
+sprite.height = data.height;
+document.getElementById("summary").textContent = `${data.frames.length} 帧 · ${data.width} × ${data.height} · 每帧 ${data.frameMs} ms · 周期 ${data.frames.length * data.frameMs} ms`;
+function showFrame(value) {
+  index = (value + data.frames.length) % data.frames.length;
+  sprite.src = images[index].src;
+  counter.textContent = `${index + 1} / ${data.frames.length}`;
+  sprite.alt = `角色动作第 ${index + 1} 帧`;
+}
+function pause() {
+  playing = false;
+  cancelAnimationFrame(requestId);
+  toggle.textContent = "播放";
+  status.textContent = "已暂停";
+}
+function tick(now) {
+  if (!playing) return;
+  // Use elapsed time instead of incrementing once per callback, avoiding timer drift.
+  const value = (startIndex + Math.floor((now - startTime) / data.frameMs)) % data.frames.length;
+  if (value !== index) showFrame(value);
+  requestId = requestAnimationFrame(tick);
+}
+toggle.addEventListener("click", () => {
+  if (playing) { pause(); return; }
+  playing = true;
+  startIndex = index;
+  startTime = performance.now();
+  toggle.textContent = "暂停";
+  status.textContent = "循环播放中";
+  requestId = requestAnimationFrame(tick);
+});
+previous.addEventListener("click", () => { pause(); showFrame(index - 1); });
+next.addEventListener("click", () => { pause(); showFrame(index + 1); });
+document.getElementById("background").addEventListener("change", event => {
+  document.getElementById("stage").dataset.background = event.target.value;
+});
+document.addEventListener("visibilitychange", () => { if (document.hidden && playing) pause(); });
+Promise.all(data.frames.map(path => new Promise((resolve, reject) => {
+  const image = new Image();
+  image.onload = () => resolve(image);
+  image.onerror = () => reject(new Error(`无法读取 ${path}，请将 preview.html 与 frames 文件夹保存在同一目录。`));
+  image.src = path;
+}))).then(loaded => {
+  images = loaded;
+  showFrame(0);
+  [toggle, previous, next].forEach(button => { button.disabled = false; });
+  status.textContent = "已就绪，点击播放";
+}).catch(error => {
+  const message = document.getElementById("error");
+  message.hidden = false;
+  message.textContent = error.message;
+  status.textContent = "加载失败";
+});
+</script>
+</html>

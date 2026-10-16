@@ -1,0 +1,4 @@
+interface:
+  display_name: "角色创建与透明循环帧"
+  short_description: "先创建并确认角色母版，再制作造型一致的透明循环动作帧，也可复用已有角色"
+  default_prompt: "使用 $character-sprite-loop，先根据我的描述创建角色并展示，待我确认后，沿用母版制作指定动作的透明循环帧，输出独立 PNG 和 APNG 预览。"
