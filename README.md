@@ -6,6 +6,22 @@ A Codex skill for creating a character, confirming its master image, and produci
 
 调用名：`$character-sprite-loop`。界面名称：**角色创建与透明循环帧**。
 
+## 动画效果
+
+以下来自此前完成的角色动画，展示基础跑步、复合动作和道具互动。GIF 使用白底方便浏览；原始 APNG 保留透明背景。预览沿用原动画的帧顺序与播放速度，没有重新生成动作。
+
+| 贴地跑步 | 边走边擦汗 |
+| :---: | :---: |
+| <img src="docs/demos/ant-run.gif" width="320" alt="粉色像素蚂蚁贴地跑步循环"> | <img src="docs/demos/ant-wipe-walk.gif" width="320" alt="粉色像素蚂蚁抬手擦汗并迈步的循环"> |
+| 8 帧 · 0.72 秒 · [透明 APNG](docs/demos/ant-run.apng) | 12 帧 · 1.08 秒 · [透明 APNG](docs/demos/ant-wipe-walk.apng) |
+
+| 边跑边撒钱 | 压杠杆 |
+| :---: | :---: |
+| <img src="docs/demos/ant-run-money.gif" width="320" alt="粉色像素蚂蚁边跑边向上抛出绿色钞票"> | <img src="docs/demos/ant-lever.gif" width="320" alt="粉色像素蚂蚁压下杠杆并抬起钞票的循环"> |
+| 12 帧 · 1.20 秒 · [透明 APNG](docs/demos/ant-run-money.apng) | 12 帧 · 1.20 秒 · [透明 APNG](docs/demos/ant-lever.apng) |
+
+这些示例用于直观展示动作类型，不代表每次生成都能直接得到无缝动画；造型、接触关系与首尾过渡仍需按下文流程检查。
+
 ## 能做什么
 
 - 根据描述创建完整角色，在用户确认后保存母版及角色说明。
@@ -133,6 +149,6 @@ GitHub Actions 配置在 Windows、Linux 和 Python 3.10 / 3.13 上运行测试�
 
 ## 许可与素材
 
-代码、文档和预览模板采用 [MIT License](LICENSE)。公开包不包含对话中的角色图片或私人动画；测试样本由代码构造。用户自行提供的参考图和生成结果不因使用本仓库而自动获得 MIT 许可。
+代码、文档和预览模板采用 [MIT License](LICENSE)。`docs/demos/` 中的动画由项目维护者提供用于效果展示，不包含在 MIT 授权范围内；复用这些素材请先联系维护者。测试样本由代码构造，不依赖展示素材。用户自行提供的参考图和生成结果不因使用本仓库而自动获得 MIT 许可。
 
 技术参考：[GitHub 官方 Actions](https://github.com/actions)、[MIT 许可原文](https://opensource.org/license/mit)。
