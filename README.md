@@ -6,6 +6,22 @@ A Codex skill for creating a character, confirming its master image, and produci
 
 调用名：`$character-sprite-loop`。界面名称：**角色创建与透明循环帧**。
 
+## 动画案例：角色母版 → 透明循环
+
+以下为 **AI 生成的蔡徐坤转身顶肩动作演示**，无篮球。25 帧，每帧 200 毫秒，每轮 5 秒。
+
+| 已确认的角色母版 | 循环动作预览 |
+| --- | --- |
+| <img src="docs/demos/cai-xukun-master.png" width="320" alt="AI 生成的蔡徐坤全身角色母版，黑色上衣和灰色背带裤"> | <img src="docs/demos/cai-xukun-shoulder-turn.gif" width="320" alt="AI 生成的转身顶肩动作循环，25帧，每轮5秒，无篮球"> |
+
+动作阶段：准备 → 转身 → 蓄力 → 顶肩 → 回收 → 复位。
+
+[下载透明 APNG 原文件](docs/demos/cai-xukun-shoulder-turn.apng) · [查看透明角色母版](docs/demos/cai-xukun-master.png)
+
+GIF 使用浅色底方便阅读；APNG 和母版保留透明背景。帧数、时长和 APNG 解码时序已验证。此案例为用户选定的效果演示，仍有细微脸部、服装和脚位变化，未完成连续两个循环的视觉验收，不作为无缝或原舞蹈精确复现的证明。
+
+非官方 AI 演示，非真人拍摄，不代表本人参与、授权或代言。演示图片与动画不纳入代码的 MIT 许可，详见[素材说明](docs/demos/NOTICE.md)。
+
 ## 能做什么
 
 - 根据描述创建完整角色，在用户确认后保存母版及角色说明。
@@ -133,6 +149,6 @@ GitHub Actions 配置在 Windows、Linux 和 Python 3.10 / 3.13 上运行测试�
 
 ## 许可与素材
 
-代码、文档和预览模板采用 [MIT License](LICENSE)。公开包不包含对话中的角色图片或私人动画；测试样本由代码构造。用户自行提供的参考图和生成结果不因使用本仓库而自动获得 MIT 许可。
+代码、文档和预览模板采用 [MIT License](LICENSE)。仓库包含用户选定的 AI 动画展示素材；这些素材不纳入 MIT 许可，见 [素材说明](docs/demos/NOTICE.md)。测试样本由代码构造。用户自行提供的参考图和生成结果不因使用本仓库而自动获得 MIT 许可。
 
 技术参考：[GitHub 官方 Actions](https://github.com/actions)、[MIT 许可原文](https://opensource.org/license/mit)。
